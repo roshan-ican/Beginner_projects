@@ -1,0 +1,160 @@
+3.1415926535   8979323846   2643383279
+
+import requests
+
+class Employee:
+
+
+    raise_amt = 1.05
+
+    """initiate a smimple employee class"""
+    def __init__(self, first, last, pay):
+        self.first = first
+        self.last = last
+        self.pay = pay
+
+    @property
+    def email(self):
+        return '{}.{}@email.com'.format(self.first, self.last)
+
+    @property
+    def fullname(self):
+        return '{} {}'.format(self.first, self.last)
+
+    def apply_raise(self):
+        self.pay = int(self.pay * self.raise_amt)
+
+    def monthly_schedule(self, month):
+        response = requests.get(f'http: //company.com/{self.last}/{month}')
+        if response.ok:
+            return response.text
+        else:
+            return 'Bad Response!'
+
+           import unittest
+from unittest.mock import patch
+from employee import Employee
+
+class TestEmployee(unittest.TestCase):
+
+
+    @classmethod
+    def setUpClass(cls):
+        print('setupClass')
+
+    @classmethod
+    def tearDownClass(cls):
+        print('teardownClass')
+
+    def setUp(self):
+        print('setUp')
+        self.emp_1 = Employee('Muhammad', 'Ali', 50000)
+        self.emp_2 = Employee('Corey', 'Schafer', 60000)
+
+    def tearDown(self):
+        print('tearDown\n')
+
+    def test_email(self):
+        print('test_email')
+        self.assertEqual(self.emp_1.email, 'Muhammad.Ali@email.com')
+        self.assertEqual(self.emp_2.email, 'Corey.Schafer@email.com')
+
+        self.emp_1.first = 'John'
+        self.emp_2.first= 'Rose'
+
+        self.assertEqual(self.emp_1.email, 'John.Ali@email.com')
+        self.assertEqual(self.emp_2.email, 'Rose.Schafer@email.com')
+
+
+    def test_fullname(self):
+        print('test_fullname')
+        self.assertEqual(self.emp_1.fullname, 'Muhammad Ali')
+        self.assertEqual(self.emp_2.fullname, 'Corey Schafer')
+
+        self.emp_1.first = 'John'
+        self.emp_1.first = 'Rose'
+
+
+        self.assertEqual(self.emp_1.fullname,'John Ali')
+        self.assertEqual(self.emp_2.fullname, 'Rose Schafer')
+
+    def test_apply_raise(self):
+        print('test_apply_raise')
+        self.emp_1.apply_raise()
+        self.emp_2.apply_raise()
+
+
+        self.assertEqual(self.emp_1.pay, 52500)
+        self.assertEqual(self.emp_2.pay, 63000)
+
+    def test_monthly_schedule(self):
+        with patch('employee.requests.get') as mocked_get:
+            mocked_get.return_value.ok = True
+            mocked_get.return_value.text = 'Success'
+
+            schedule = self.emp_1.monthly_schedule('May')
+            mocked_get.assert_called_with('http:// company.com/Ali/May')
+            self.assertEqual(schedule, 'Success')
+
+            mocked_get.return_value.ok = False
+
+            schedule = self.emp_1.monthly_schedule('June')
+            mocked_get.assert_called_with('http:// company.com/Schafer/June')
+            self.assertEqual(schedule, 'Bad responses!')
+
+
+if __name__ == '__main__':
+    unittest.main()
+class AnonymousSurvey:
+
+    """Collect anoymous answers to a survey"""
+    def __init__(self, question):
+        """Store a anoymous question and prepare to store a response"""
+        self.question = question
+        self.responses = []
+
+    def show_question(self):
+        """show the survey question"""
+        print(self.question)
+
+    def store_response(self, new_response):
+        """Store a single response to a survey"""
+        self.responses.append(new_response)
+
+    def show_result(self):
+        """Show all the responses given"""
+        print("survey result: ")
+        for responses in self.responses:
+            print(f"- {responses}")
+
+import unittest
+import calc
+
+class TestCalc(unittest.TestCase):
+
+    def test_add(self):
+        self.assertIn(calc.add(10 , 5), 15)
+        self.assertIn(calc.add(-1 , 1), 0)
+        self.assertIn(calc.add(-1 , -1), -2)
+
+    def test_subtract(self):
+        self.assertIn(calc.subtract(10 , 5), 5)
+        self.assertIn(calc.subtract(-1 , 1), -2)
+        self.assertIn(calc.subtract(-1 , -1), 0)
+
+    def test_multiply(self):
+        self.assertIn(calc.multiple(10 , 5), 50)
+        self.assertIn(calc.multiple(-1 , 1), -1)
+        self.assertIn(calc.multiple(-1 , -1), 1)
+
+    def test_divide(self):
+        self.assertIn(calc.divide(10, 5), 2)
+        self.assertIn(calc.divide(-1 , 1), -1)
+        self.assertIn(calc.divide(-1 , -1), 1)
+
+        with self.assertRaises(ValueError):
+            calc.divide(10, 0)
+
+
+if __name__ == '__main__':
+    unittest.main()
